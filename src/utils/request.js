@@ -7,7 +7,13 @@ import pathToRegexp from 'path-to-regexp'
 import { message } from 'antd'
 
 axios.defaults.baseURL = baseURL;
-axios.defaults.headers['Content-Type'] = 'text/plain;charset=UTF-8'
+//axios.defaults.headers['Accept-Charset'] = 'utf-8'
+//axios.defaults.headers['Content-Type'] = 'text/plain;charset=UTF-8'
+axios.defaults.headers['Accept'] = '*/*'
+//axios.defaults.headers['Accept-Encoding'] = 'gzip, deflate'
+//axios.defaults.headers['Accept-Language'] = 'zh-CN,zh;q=0.8'
+//axios.defaults.headers['Content-Type'] = 'application/json'
+
 
 const fetch = (options) => {
   let {
@@ -17,7 +23,10 @@ const fetch = (options) => {
     url,
   } = options
 
-  const cloneData = lodash.cloneDeep(data)
+  const cloneData = lodash.cloneDeep(data);
+
+  alert(window.token)
+  axios.defaults.headers['set-cookie'] = "JSESSIONID="+window.token+"; Path=/ilvdo-bizsys; HttpOnly";
 
   try {
     let domin = ''

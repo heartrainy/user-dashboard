@@ -24,9 +24,10 @@ export async function heart () {
   })
 }
 
-export async function test () {
+export async function test (data) {
   return request({
     url: userTest,
-    method: 'get'
+    method: 'get',
+    data
   })
 }

@@ -35,8 +35,12 @@ export default {
         //   const data = call(heart);
         //   console.log(data);
         // }, 5000);
-        const data = yield call(test);
-        console.log(data);
+        //const data = yield call(test);
+        //console.log(data);
+        alert("登录成功");
+        //获取token
+        window.token = data.token;
+        yield put({ type: 'test'});
       } else {
         message.error(data.message);
       }
@@ -55,7 +59,7 @@ export default {
       const data = yield call(heart);
       console.log(data);
     },
-    *test(){
+    *test({payload}, {put, call}){
       const data = yield call(test);
       console.log(data);
     }
