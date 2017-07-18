@@ -25,7 +25,6 @@ const fetch = (options) => {
 
   const cloneData = lodash.cloneDeep(data);
 
-  alert(window.token)
   axios.defaults.headers['set-cookie'] = "JSESSIONID="+window.token+"; Path=/ilvdo-bizsys; HttpOnly";
 
   try {
