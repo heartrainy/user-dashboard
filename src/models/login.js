@@ -25,22 +25,12 @@ export default {
     *login({payload}, {put, call}){
       payload.txyzm = "";
       yield put({type: 'showLoginLoading'});
+      //登录请求返回true或false
       const data = yield call(login, payload);
       yield put({type: 'hideLoginLoading'});
       if (data.isSuccess) {
-        //yield put(routerRedux.push('/home'));
-        //启动心跳
-        // clearInterval(window.heart);
-        // setInterval(function () {
-        //   const data = call(heart);
-        //   console.log(data);
-        // }, 5000);
-        //const data = yield call(test);
-        //console.log(data);
-        alert("登录成功");
-        //获取token
-        window.token = data.token;
-        yield put({ type: 'test'});
+        //查询用户信息及菜单
+        yield put({ type: 'app/query' });
       } else {
         message.error(data.message);
       }
@@ -57,7 +47,6 @@ export default {
     },
     *heart({payload}, {put, call}){
       const data = yield call(heart);
-      console.log(data);
     },
     *test({payload}, {put, call}){
       const data = yield call(test);

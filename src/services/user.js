@@ -5,7 +5,7 @@ const { userList, userAdd, userEdit, userRemove } = api
 export function query(params) {
   return request({
     url: userList,
-    method: 'get',
+    method: 'post',
     data: params
   })
 }

@@ -17,12 +17,11 @@ const User = ({location, dispatch, user, loading}) => {
       ...location.query,
     },
     onFilterChange (value) {
-      console.log(value);
       dispatch(routerRedux.push({
         pathname: location.pathname,
         query: {
           ...value,
-          page: 1,
+          curr: 1,
           pageSize
         }
       }))
@@ -45,12 +44,13 @@ const User = ({location, dispatch, user, loading}) => {
     location,
     onChange (page) {
       const {query, pathname} = location;
+      query.offset = (page.current - 1) * page.pageSize;
       dispatch(routerRedux.push({
         pathname,
         query: {
           ...query,
-          page: page.current,
-          pageSize: page.pageSize,
+          curr: page.current,
+          count: page.pageSize,
         }
       }))
     },

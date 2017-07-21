@@ -16,25 +16,13 @@ function UserList ({ onEditItem, onDeleteItem, location, ...tableProps }) {
   //列表设置
   const columns = [
     {
-      title: '头像',
-      dataIndex: 'avatar',
-      key: 'avatar',
-      width: 64,
-      className: styles.avatar,
-      render: (text) => <img alt={'avatar'} width={24} src={text} />,
+      title: '账号',
+      dataIndex: 'loginName',
+      key: 'loginName'
     }, {
       title: '姓名',
-      dataIndex: 'name',
-      key: 'name',
-      render: (text, record) => <Link to={`user/${record.id}`}>{text}</Link>,
-    }, {
-      title: '昵称',
-      dataIndex: 'nickName',
-      key: 'nickName',
-    }, {
-      title: '年龄',
-      dataIndex: 'age',
-      key: 'age',
+      dataIndex: 'personName',
+      key: 'personName',
     }, {
       title: '性别',
       dataIndex: 'isMale',
@@ -44,20 +32,20 @@ function UserList ({ onEditItem, onDeleteItem, location, ...tableProps }) {
             : 'Female'}</span>,
     }, {
       title: '电话',
-      dataIndex: 'phone',
-      key: 'phone',
+      dataIndex: 'mobile',
+      key: 'mobile',
     }, {
       title: 'Email',
       dataIndex: 'email',
       key: 'email',
     }, {
-      title: '地址',
-      dataIndex: 'address',
-      key: 'address',
+      title: '创建者',
+      dataIndex: 'createdBy',
+      key: 'createdBy',
     }, {
       title: '创建日期',
-      dataIndex: 'createTime',
-      key: 'createTime',
+      dataIndex: 'createdAt',
+      key: 'createdAt',
     }, {
       title: '操作',
       key: 'operation',

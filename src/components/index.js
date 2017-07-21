@@ -1,9 +1,11 @@
 import DropOption from './DropOption/DropOption'
 import FilterItem from './FilterItem/FilterItem'
-import * as MainLayout from './MainLayout/index'
+import Loader from './Loader/Loader'
+import * as Layout from './Layout/index.js'
 
 export {
   DropOption,
   FilterItem,
-  MainLayout
+  Loader,
+  Layout
 }

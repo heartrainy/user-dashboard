@@ -26,9 +26,9 @@ export default modelExtend(pageModel, {
           payload: {
             list: data.data,
             pagination: {
-              current: Number(payload.page) || 1,
-              pageSize: Number(payload.pageSize) || 10,
-              total: data.total
+              current: Number(payload.curr) || 1,
+              pageSize: Number(payload.count) || 10,
+              total: data.dataMaxCount
             }
           }
         })
@@ -67,9 +67,23 @@ export default modelExtend(pageModel, {
   },
   subscriptions: {
     setup({ dispatch, history }) {
+      clearInterval(window.heartTime);
+      window.heartTime = setInterval(function () {
+        dispatch({ type: 'login/heart'});
+      }, 5000);
       return history.listen(({ pathname, query }) => {
-        console.log(pathname);
         if (pathname === '/user') {
+          console.log(query);
+          if(query.curr == undefined){
+            query.curr = 1
+          }
+          if(query.count == undefined){
+            query.count = 5
+          }
+          if(query.offset == undefined){
+            query.offset = 0
+          }
+          query.basicStr = "abc"
           dispatch({ type: 'query', payload: query });
         }
       });

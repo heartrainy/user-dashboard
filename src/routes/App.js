@@ -1,115 +1,107 @@
-import React from 'react';
-import {connect} from 'dva';
+import React from 'react'
 import PropTypes from 'prop-types'
-import {Link} from 'dva/router';
-import {Helmet} from 'react-helmet'
-import {classnames, config, menu} from '../utils'
-import {MainLayout} from '../components'
-import {Layout, Menu, Icon} from 'antd'
-
-
-import styles from './App.less';
+import pathToRegexp from 'path-to-regexp'
+import { connect } from 'dva'
+import { Layout, Loader } from '../components/index'
+import { classnames, config } from '../utils/index'
+import { Helmet } from 'react-helmet'
 import '../themes/index.less'
+import './App.less'
+import NProgress from 'nprogress'
+import Error from './error'
+const { prefix, openPages } = config
 
-const {Bread, Footer, Menus} = MainLayout;
-const {Sider, Header} = Layout;
-const SubMenu = Menu.SubMenu;
+const { Header, Bread, Footer, Sider, styles } = Layout
+let lastHref
 
-function App({dispatch, children, location, app}) {
-  const {collapsed, darkTheme, mode, navOpenKeys} = app;
+const App = ({ children, dispatch, app, loading, location }) => {
+  const { user, siderFold, darkTheme, isNavbar, menuPopoverVisible, navOpenKeys, menu, permissions } = app
+  let { pathname } = location
+  pathname = pathname.startsWith('/') ? pathname : `/${pathname}`
+  const { iconFontJS, iconFontCSS, logo } = config
+  const current = menu.filter(item => pathToRegexp(item.route || '').exec(pathname))
+  const hasPermission = current.length ? permissions.visit.includes(current[0].id) : false
+  const href = window.location.href
 
-  //菜单配置
-  const menuProps = {
-    darkTheme,
-    mode,
-    navOpenKeys,
+  if (lastHref !== href) {
+    NProgress.start()
+    if (!loading.global) {
+      NProgress.done()
+      lastHref = href
+    }
+  }
+
+  const headerProps = {
     menu,
-    location,
+    user,
+    siderFold,
+    isNavbar,
+    menuPopoverVisible,
+    navOpenKeys,
+    switchMenuPopover () {
+      dispatch({ type: 'app/switchMenuPopver' })
+    },
+    logout () {
+      dispatch({ type: 'login/logout' })
+    },
+    switchSider () {
+      dispatch({ type: 'app/switchSider' })
+    },
     changeOpenKeys (openKeys) {
-      localStorage.setItem('navOpenKeys', JSON.stringify(openKeys))
-      dispatch({type: 'app/handleNavOpenKeys', payload: {navOpenKeys: openKeys}})
-    }
-  };
+      dispatch({ type: 'app/handleNavOpenKeys', payload: { navOpenKeys: openKeys } })
+    },
+  }
 
-  //面包屑配置
+  const siderProps = {
+    menu,
+    siderFold,
+    darkTheme,
+    navOpenKeys,
+    changeTheme () {
+      dispatch({ type: 'app/switchTheme' })
+    },
+    changeOpenKeys (openKeys) {
+      localStorage.setItem(`${prefix}navOpenKeys`, JSON.stringify(openKeys))
+      dispatch({ type: 'app/handleNavOpenKeys', payload: { navOpenKeys: openKeys } })
+    },
+  }
+
   const breadProps = {
-    menu
-  };
-
-
-  function toggle() {
-    dispatch({type: "app/toggle"});
+    menu,
   }
-
-
-  //右上角事件点击
-  function handleMenu(e) {
-    if (e.key == "logout") {
-      dispatch({type: "login/logout"});
-    }
+  if (openPages && openPages.includes(pathname)) {
+    return (<div>
+      <Loader spinning={loading.effects['app/query']} />
+      {children}
+    </div>)
   }
-
-
   return (
     <div>
       <Helmet>
         <title>ANTD ADMIN</title>
-        <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
-        {/*<link rel="icon" href={config.logoSrc} type="image/x-icon" />*/}
-        {/*{config.iconFontUrl ? <script src={config.iconFontUrl}></script> : ''}*/}
+        <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+        <link rel="icon" href={logo} type="image/x-icon" />
+        {iconFontJS && <script src={iconFontJS}></script>}
+        {iconFontCSS && <link rel="stylesheet" href={iconFontCSS} />}
       </Helmet>
-      <div className={styles.layout}>
-        <Layout className={styles.layout}>
-          <Sider
-            trigger={null}
-            collapsible
-            collapsed={collapsed}
-            className={styles.siderBg}
-          >
-            <div className={styles.logo}>
-              <span>我的平台</span>
+      <div className={classnames(styles.layout, { [styles.fold]: isNavbar ? false : siderFold }, { [styles.withnavbar]: isNavbar })}>
+        {!isNavbar ?
+          <aside className={classnames(styles.sider, { [styles.light]: !darkTheme })}>
+            <Sider {...siderProps} />
+          </aside> : ''}
+        <div className={styles.main}>
+          <Header {...headerProps} />
+          <Bread {...breadProps} />
+          <div className={styles.container}>
+            <div className={styles.content}>
+              {hasPermission ? children : <Error />}
             </div>
-            <Menus {...menuProps} defaultSelectedKeys={['1']}></Menus>
-          </Sider>
-          <Layout>
-            <div className={styles.main}>
-              <Header style={{background: '#fff', padding: 0}}>
-                {/*<Icon*/}
-                  {/*className={styles.trigger}*/}
-                  {/*type={collapsed ? 'menu-unfold' : 'menu-fold'}*/}
-                  {/*onClick={toggle}*/}
-                {/*/>*/}
-                <div className="rightWarpper">
-                  <div className="button">
-                    <Icon type="mail"/>
-                  </div>
-                  <Menu mode="horizontal" onClick={handleMenu}>
-                    <SubMenu style={{
-                      float: 'right',
-                    }} title={< span > <Icon type="user"/>adsd</span>}>
-                      <Menu.Item key="logout">
-                        退出
-                      </Menu.Item>
-                    </SubMenu>
-                  </Menu>
-                </div>
-              </Header>
-              <Bread {...breadProps} location={location}/>
-              {/*<Content style={{margin: '24px 16px', padding: 24, background: '#fff', minHeight: 280}}>*/}
-              {/*{children}*/}
-              {/*</Content>*/}
-              <div className={styles.container}>
-                <div className={styles.content}>
-                  {children}
-                </div>
-              </div>
-              <Footer/>
-            </div>
-          </Layout>
-        </Layout>
+          </div>
+          <Footer />
+        </div>
       </div>
     </div>
-  );
+  )
 }
 
 App.propTypes = {
@@ -117,10 +109,7 @@ App.propTypes = {
   location: PropTypes.object,
   dispatch: PropTypes.func,
   app: PropTypes.object,
+  loading: PropTypes.object,
 }
 
-function mapStateToProps(app) {
-  return app;
-}
-
-export default connect(mapStateToProps)(App);
+export default connect(({ app, loading }) => ({ app, loading }))(App)
