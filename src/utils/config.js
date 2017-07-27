@@ -18,7 +18,7 @@ module.exports = {
     userRemove: '/userRemove',
     userLogin: '/bizsyscst/login/login',
     userLogout: '/bizsyscst/login/dataLogout',
-    userInfo: '/userInfo',
+    userInfo: '/bizsyscst/login/getUserInfo',
     dashboard: '/dashboard',
     userHeart: '/bizsyscst/login/heart',
     userTest: '/bizsyscst/login/test',

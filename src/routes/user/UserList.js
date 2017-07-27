@@ -25,8 +25,8 @@ function UserList ({ onEditItem, onDeleteItem, location, ...tableProps }) {
       key: 'personName',
     }, {
       title: '性别',
-      dataIndex: 'isMale',
-      key: 'isMale',
+      dataIndex: 'sex',
+      key: 'sex',
       render: (text) => <span>{text
             ? 'Male'
             : 'Female'}</span>,

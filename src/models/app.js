@@ -1,5 +1,6 @@
 import { query, logout } from '../services/app'
 import * as menusService from '../services/menus'
+import { getUserInfo } from '../services/login'
 import { routerRedux } from 'dva/router'
 import { parse } from 'qs'
 import config from '../utils/config'
@@ -34,7 +35,7 @@ export default {
   subscriptions: {
 
     setup ({ dispatch }) {
-      dispatch({ type: 'query' })
+      dispatch({ type: 'query' });
       let tid
       window.onresize = () => {
         clearTimeout(tid)
@@ -51,9 +52,9 @@ export default {
       payload,
     }, { call, put }) {
       //获取用户信息及权限
-      //const { success, user } = yield call(query, payload);
-      const { success, user } = userData;
-      if (success && user) {
+      let { isSuccess, data } = yield call(getUserInfo, payload);
+      const user = userData.user;
+      if (isSuccess && data) {
         //获取菜单列表
         //const { list } = yield call(menusService.query);
         let list = menuData;

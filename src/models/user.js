@@ -67,10 +67,10 @@ export default modelExtend(pageModel, {
   },
   subscriptions: {
     setup({ dispatch, history }) {
-      clearInterval(window.heartTime);
-      window.heartTime = setInterval(function () {
-        dispatch({ type: 'login/heart'});
-      }, 5000);
+      // clearInterval(window.heartTime);
+      // window.heartTime = setInterval(function () {
+      //   dispatch({ type: 'login/heart'});
+      // }, 5000);
       return history.listen(({ pathname, query }) => {
         if (pathname === '/user') {
           console.log(query);

@@ -1,6 +1,6 @@
 import { request, config } from '../utils'
 const { api } = config
-const { userLogin, userLogout, userHeart, userTest } = api
+const { userLogin, userLogout, userHeart, userTest, userInfo } = api
 
 export async function login (data) {
   return request({
@@ -13,7 +13,7 @@ export async function login (data) {
 export async function logout () {
   return request({
     url: userLogout,
-    method: 'get'
+    method: 'post'
   })
 }
 
@@ -28,5 +28,12 @@ export async function test () {
   return request({
     url: userTest,
     method: 'get'
+  })
+}
+
+export async function getUserInfo () {
+  return request({
+    url: userInfo,
+    method: 'post'
   })
 }
